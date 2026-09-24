@@ -1,0 +1,327 @@
+// Retro Ollie Games — database schema
+// Entities cover storefront, commerce, refurbishment services, and admin analytics.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Platform / Category ----------
+
+model Platform {
+  id        String    @id @default(cuid())
+  name      String    @unique // PLAYSTATION, XBOX, NINTENDO, RETRO, HANDHELDS, GAMES, CONTROLLERS, POKEMON, PC_MAC, ACCESSORIES
+  slug      String    @unique
+  blurb     String?
+  order     Int       @default(0)
+  products  Product[]
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  slug     String    @unique
+  products Product[]
+}
+
+// ---------- Catalog ----------
+
+model Product {
+  id            String   @id @default(cuid())
+  inventoryId   String   @unique // ROG-PS3-0042 (public)
+  slug          String   @unique
+  name          String
+  model         String?
+  platformId    String
+  platform      Platform @relation(fields: [platformId], references: [id])
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id])
+  condition     Condition // PLAYER | RESTORED | VAULT
+  cosmeticGrade String? // e.g. "B+ (light wear)"
+  storage       String?
+  color         String?
+  description   String   @db.Text
+  priceCents    Int
+  compareAtCents Int?
+  quantity      Int      @default(1)
+  status        ProductStatus @default(DRAFT) // DRAFT | AVAILABLE | RESERVED | SOLD
+  featured      Boolean  @default(false)
+  specialEdition Boolean @default(false)
+  collectible   Boolean  @default(false)
+  shippingWeightLbs Float?
+  seoTitle      String?
+  seoDescription String? @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  publishedAt   DateTime?
+
+  images        ProductImage[]
+  accessories   ProductAccessory[]
+  inspection    Inspection?
+  orderItems    OrderItem[]
+  sourcingRecord SourcingRecord?
+  defectNotes   String? @db.Text // known cosmetic imperfections (public)
+
+  @@index([platformId, status])
+  @@index([status, createdAt])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  sort      Int     @default(0)
+  isBefore  Boolean @default(false) // before/after restoration pair
+  isAfter   Boolean @default(false)
+}
+
+model ProductAccessory {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  quantity  Int     @default(1)
+}
+
+// ---------- Respawn Report (inspection / refurbishment record) ----------
+
+model Inspection {
+  id            String  @id @default(cuid())
+  productId     String  @unique
+  product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  workPerformed String? @db.Text // public-facing summary
+  completedAt   DateTime?
+  items         InspectionItem[]
+}
+
+model InspectionItem {
+  id           String     @id @default(cuid())
+  inspectionId String
+  inspection   Inspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  label        String // "Power", "Video output", "Disc drive", ...
+  passed       Boolean
+  sort         Int        @default(0)
+}
+
+// ---------- Private sourcing & costs (never rendered publicly) ----------
+
+model SourcingRecord {
+  id             String   @id @default(cuid())
+  productId      String   @unique
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  source         SourceType @default(OTHER) // FACEBOOK_MARKETPLACE, EBAY, CRAIGSLIST, GARAGE_SALE, TRADE_IN, CUSTOMER, OTHER
+  sourceNotes    String?  @db.Text
+  acquiredAt     DateTime?
+  acquisitionCents Int    @default(0) // PRIVATE
+  partsCents     Int      @default(0) // PRIVATE
+  otherCents     Int      @default(0) // PRIVATE
+  serialNumber   String? // PRIVATE
+}
+
+// ---------- Orders ----------
+
+model Order {
+  id             String   @id @default(cuid())
+  number         String   @unique // ROG-000123
+  stripeSessionId String? @unique
+  stripePaymentIntentId String?
+  email          String
+  name           String?
+  subtotalCents  Int
+  taxCents       Int      @default(0)
+  shippingCents  Int      @default(0)
+  totalCents     Int
+  status         OrderStatus @default(PENDING) // PENDING | PAID | FULFILLED | CANCELLED | REFUNDED
+  addressLine1   String?
+  addressLine2   String?
+  city           String?
+  state          String?
+  postalCode     String?
+  country        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  items          OrderItem[]
+}
+
+model OrderItem {
+  id            String  @id @default(cuid())
+  orderId       String
+  order         Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     String
+  product       Product @relation(fields: [productId], references: [id])
+  nameSnapshot  String
+  inventoryIdSnapshot String
+  unitPriceCents Int
+  quantity      Int     @default(1)
+  platformNameSnapshot String?
+}
+
+// ---------- Refurbishment services ----------
+
+model ServiceTier {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String // "Basic Cleaning", "Console Refresh", ...
+  description String  @db.Text
+  deviceFamilies String // comma-separated slugs: "playstation,xbox,nintendo"
+  priceCents  Int     // null pricing is handled by hiding tier until admin sets price
+  active      Boolean @default(true)
+  sortOrder   Int     @default(0)
+  requests    ServiceRequest[]
+}
+
+model ServiceRequest {
+  id            String   @id @default(cuid())
+  jobNumber     String   @unique // RESPAWN-00128
+  deviceFamily  String
+  deviceModel   String?
+  serviceTierId String
+  serviceTier   ServiceTier @relation(fields: [serviceTierId], references: [id])
+  symptoms      String?  @db.Text
+  photos        String[] // blob URLs
+  contactName   String
+  email         String
+  phone         String?
+  shippingMethod String  @default("SHIP_TO_US") // SHIP_TO_US | LOCAL_DROP_OFF
+  quotedCents   Int
+  depositCents  Int       @default(0)
+  depositPaidAt DateTime?
+  stripeDepositSessionId String? @unique
+  status        ServiceStatus @default(REQUEST_RECEIVED)
+  termsAcceptedAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  statusEvents  ServiceStatusEvent[]
+}
+
+model ServiceStatusEvent {
+  id              String        @id @default(cuid())
+  serviceRequestId String
+  serviceRequest  ServiceRequest @relation(fields: [serviceRequestId], references: [id], onDelete: Cascade)
+  status          ServiceStatus
+  note            String? // internal note, never rendered publicly
+  createdAt       DateTime      @default(now())
+}
+
+// ---------- Sell / Trade ----------
+
+model TradeSubmission {
+  id            String   @id @default(cuid())
+  device        String
+  model         String?
+  conditionDesc String?  @db.Text
+  accessories   String?
+  photos        String[]
+  askingPrice   String?
+  contactName   String
+  email         String
+  status        TradeStatus @default(NEW)
+  createdAt     DateTime @default(now())
+}
+
+// ---------- Content ----------
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String   @db.Text
+  body        String   @db.Text
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+}
+
+// ---------- Misc ----------
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+model EmailSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  key   String @id
+  value String
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  detail    String?  @db.Text
+  createdAt DateTime @default(now())
+}
+
+model FindAnotherInterest {
+  id        String   @id @default(cuid())
+  productId String
+  email     String
+  createdAt DateTime @default(now())
+}
+
+// ---------- Enums ----------
+
+enum Condition {
+  PLAYER
+  RESTORED
+  VAULT
+}
+
+enum ProductStatus {
+  DRAFT
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELLED
+  REFUNDED
+}
+
+enum SourceType {
+  FACEBOOK_MARKETPLACE
+  EBAY
+  CRAIGSLIST
+  GARAGE_SALE
+  TRADE_IN
+  CUSTOMER
+  OTHER
+}
+
+enum ServiceStatus {
+  REQUEST_RECEIVED
+  AWAITING_DEVICE
+  DEVICE_RECEIVED
+  INSPECTION
+  CLEANING
+  REFURBISHMENT
+  TESTING
+  READY
+  RETURN_SHIPPING
+  COMPLETED
+}
+
+enum TradeStatus {
+  NEW
+  OFFER_MADE
+  DEAL
+  PASSED
+}
