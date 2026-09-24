@@ -165,7 +165,7 @@ export default async function Home() {
                 <div className="flex-1 text-center">
                   <div className="relative mx-auto aspect-square w-full max-w-40 overflow-hidden rounded-sm border border-line bg-panel-2">
                     <Image
-                      src="/images/refurb-before.jpg"
+                      src="/images/refurb-before.svg"
                       alt="A dusty console before refurbishment"
                       fill
                       sizes="200px"
@@ -178,7 +178,7 @@ export default async function Home() {
                 <div className="flex-1 text-center">
                   <div className="relative mx-auto aspect-square w-full max-w-40 overflow-hidden rounded-sm border border-phosphor/30 bg-panel-2">
                     <Image
-                      src="/images/refurb-after.jpg"
+                      src="/images/refurb-after.svg"
                       alt="The same console after professional restoration"
                       fill
                       sizes="200px"
