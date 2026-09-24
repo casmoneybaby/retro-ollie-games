@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import { db } from "@/lib/db";
 import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import { completeOrder } from "@/lib/order-lifecycle";

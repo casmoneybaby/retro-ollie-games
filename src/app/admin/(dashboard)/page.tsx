@@ -55,14 +55,6 @@ export default async function AdminDashboard() {
     .filter((r) => r.status === "COMPLETED" as never)
     .reduce((s, r) => s + r.quotedCents, 0);
 
-  const daysHeld = (p: (typeof soldProducts)[number]): number | null => {
-    if (!p.publishedAt) return null;
-    const sold = p.updatedAt;
-    return Math.max(1, Math.round((sold.getTime() - p.publishedAt.getTime()) / 86_400_000));
-  };
-  const heldArr = soldProducts.map(daysHeld).filter((d): d is number => d !== null);
-  const avgDaysHeld = heldArr.length > 0 ? Math.round(heldArr.reduce((s, d) => s + d, 0) / heldArr.length) : null;
-
   const recent = await db.order.findMany({
     orderBy: { createdAt: "desc" },
     take: 6,

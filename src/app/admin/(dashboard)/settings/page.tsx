@@ -1,8 +1,7 @@
 import { db } from "@/lib/db";
-import { formatPrice } from "@/lib/utils";
 import { DEFAULT_REFURB_CHECKLIST } from "@/lib/site";
 import { getSiteSettingJSON } from "@/lib/queries";
-import { saveRefurbChecklistAction, updateTierAction } from "@/app/actions/settings";
+import { updateTierAction } from "@/app/actions/settings";
 import { ChecklistEditor } from "./checklist-editor";
 
 export const dynamic = "force-dynamic";

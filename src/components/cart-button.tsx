@@ -1,20 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { readCart, subscribe, type CartItem } from "@/lib/cart";
+import { useCart } from "@/lib/use-cart";
 
 export function CartButton() {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    const sync = () => setItems(readCart());
-    sync();
-    setReady(true);
-    return subscribe(sync);
-  }, []);
-
+  const { items, ready } = useCart();
   const count = items.length;
 
   return (

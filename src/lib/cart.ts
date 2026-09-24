@@ -16,6 +16,10 @@ export type CartItem = {
 const KEY = "rog_cart_v1";
 const CHANGE_EVENT = "rog-cart-changed";
 const MAX_ITEMS = 20;
+const EMPTY_CART: CartItem[] = [];
+
+let cachedRaw: string | null | undefined;
+let cachedItems = EMPTY_CART;
 
 function isValidItem(v: unknown): v is CartItem {
   if (typeof v !== "object" || v === null) return false;
@@ -32,16 +36,29 @@ function isValidItem(v: unknown): v is CartItem {
 }
 
 export function readCart(): CartItem[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") return EMPTY_CART;
   try {
     const raw = window.localStorage.getItem(KEY);
-    if (!raw) return [];
+    if (raw === cachedRaw) return cachedItems;
+
+    cachedRaw = raw;
+    if (!raw) {
+      cachedItems = EMPTY_CART;
+      return cachedItems;
+    }
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isValidItem).slice(0, MAX_ITEMS);
+    cachedItems = Array.isArray(parsed)
+      ? parsed.filter(isValidItem).slice(0, MAX_ITEMS)
+      : EMPTY_CART;
+    return cachedItems;
   } catch {
-    return [];
+    cachedItems = EMPTY_CART;
+    return cachedItems;
   }
+}
+
+export function getServerCartSnapshot(): CartItem[] {
+  return EMPTY_CART;
 }
 
 function writeCart(items: CartItem[]): void {

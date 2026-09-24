@@ -47,7 +47,7 @@ export function SellTradeForm() {
       </div>
 
       <label className="mt-4 flex flex-col gap-1.5">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-mist">Condition / what's included?</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-mist">Condition / what&apos;s included?</span>
         <textarea
           name="conditionDesc"
           rows={4}

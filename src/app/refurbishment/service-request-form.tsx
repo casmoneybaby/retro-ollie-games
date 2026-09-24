@@ -87,7 +87,7 @@ export function ServiceRequestForm({ tiers }: { tiers: Tier[] }) {
       </div>
 
       <label className="mt-4 flex flex-col gap-1.5">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-mist">Symptoms / what's wrong?</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-mist">Symptoms / what&apos;s wrong?</span>
         <textarea
           name="symptoms"
           rows={4}
@@ -133,7 +133,7 @@ export function ServiceRequestForm({ tiers }: { tiers: Tier[] }) {
             defaultValue="SHIP_TO_US"
             className="h-11 rounded-sm border border-line bg-ink px-3 text-sm focus:border-phosphor/50 focus:outline-none"
           >
-            <option value="SHIP_TO_US">I'll ship it to the workshop</option>
+            <option value="SHIP_TO_US">I&apos;ll ship it to the workshop</option>
             <option value="LOCAL_DROP_OFF">Local drop-off</option>
           </select>
         </label>

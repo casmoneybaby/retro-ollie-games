@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { Condition, ProductStatus } from "@/generated/prisma/enums";
+import { ProductStatus } from "@/generated/prisma/enums";
 
 export type StorefrontProduct = Awaited<ReturnType<typeof getProducts>>[number];
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { db } from "@/lib/db";
-import { getStripe, isStripeConfigured } from "@/lib/stripe";
-import { completeOrder, releaseOrder, findPendingOrderBySession } from "@/lib/order-lifecycle";
+import { getStripe } from "@/lib/stripe";
+import { completeOrder, releaseOrder } from "@/lib/order-lifecycle";
 import { logAudit } from "@/lib/audit";
 
 export const runtime = "nodejs";

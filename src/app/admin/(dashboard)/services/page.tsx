@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import { SERVICE_STATUS_FLOW, SERVICE_STATUS_LABELS } from "@/lib/site";
 import { updateServiceStatusAction, updateServiceQuoteAction } from "@/app/actions/admin";
-import { ServiceStatus } from "@/generated/prisma/enums";
+
 
 export const dynamic = "force-dynamic";
 

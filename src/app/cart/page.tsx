@@ -1,33 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
-import { readCart, removeItem, subscribe, type CartItem } from "@/lib/cart";
+import { useState, useSyncExternalStore, useTransition } from "react";
+import { removeItem } from "@/lib/cart";
+import { useCart } from "@/lib/use-cart";
 import { formatPrice } from "@/lib/utils";
 
 type CheckoutError = "sold_out" | "generic" | null;
 
+const subscribeToLocation = () => () => {};
+
+function getCheckoutError(): CheckoutError {
+  const error = new URLSearchParams(window.location.search).get("error");
+  if (error === "sold_out") return "sold_out";
+  return error ? "generic" : null;
+}
+
+const getServerCheckoutError = () => null;
+
 export default function CartPage() {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [ready, setReady] = useState(false);
-  const [error, setError] = useState<CheckoutError>(null);
+  const { items, ready } = useCart();
+  const urlError = useSyncExternalStore(
+    subscribeToLocation,
+    getCheckoutError,
+    getServerCheckoutError
+  );
+  const [checkoutError, setCheckoutError] = useState<CheckoutError | undefined>(undefined);
   const [pending, startTransition] = useTransition();
-
-  useEffect(() => {
-    const sync = () => setItems(readCart());
-    sync();
-    setReady(true);
-    return subscribe(sync);
-  }, []);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error") === "sold_out") setError("sold_out");
-    else if (params.get("error")) setError("generic");
-  }, []);
+  const error = checkoutError === undefined ? urlError : checkoutError;
 
   async function checkout() {
-    setError(null);
+    setCheckoutError(null);
     startTransition(async () => {
       try {
         const res = await fetch("/api/checkout", {
@@ -40,10 +43,10 @@ export default function CartPage() {
           window.location.href = data.url;
           return;
         }
-        if (data.error === "sold_out") setError("sold_out");
-        else setError("generic");
+        if (data.error === "sold_out") setCheckoutError("sold_out");
+        else setCheckoutError("generic");
       } catch {
-        setError("generic");
+        setCheckoutError("generic");
       }
     });
   }

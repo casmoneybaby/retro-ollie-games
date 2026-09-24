@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { lookupOrderAction } from "@/app/actions/orders";
 import { formatPrice } from "@/lib/utils";
-import { OrderStatus } from "@/generated/prisma/enums";
+
 
 export function OrderLookupForm() {
   const [state, action, pending] = useActionState(lookupOrderAction, null);
