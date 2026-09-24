@@ -113,6 +113,11 @@ export type SiteSetting = Prisma.SiteSettingModel
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
+ * Model ContactMessage
+ * 
+ */
+export type ContactMessage = Prisma.ContactMessageModel
+/**
  * Model FindAnotherInterest
  * 
  */

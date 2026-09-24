@@ -70,6 +70,7 @@ export const ModelName = {
   EmailSubscriber: 'EmailSubscriber',
   SiteSetting: 'SiteSetting',
   AuditLog: 'AuditLog',
+  ContactMessage: 'ContactMessage',
   FindAnotherInterest: 'FindAnotherInterest'
 } as const
 
@@ -94,6 +95,7 @@ export const PlatformScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   blurb: 'blurb',
+  imageUrl: 'imageUrl',
   order: 'order'
 } as const
 
@@ -356,6 +358,19 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  subject: 'subject',
+  message: 'message',
+  handled: 'handled',
+  createdAt: 'createdAt'
+} as const
+
+export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
 
 
 export const FindAnotherInterestScalarFieldEnum = {

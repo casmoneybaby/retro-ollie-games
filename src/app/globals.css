@@ -1,15 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  /* Retro Ollie Games design tokens — dark workshop, one phosphor accent */
-  --color-ink: #0a0c0a;
-  --color-panel: #101410;
-  --color-panel-2: #161b16;
-  --color-line: #242c24;
-  --color-bone: #e9f0e5;
-  --color-mist: #97a493;
-  --color-phosphor: #4ae382;
-  --color-phosphor-dim: #2e8f52;
+  /* Retro Ollie Games — premium dark gaming retailer
+     Near-black navy base, electric mint primary, cyan/purple/orange accents */
+  --color-ink: #060a12;
+  --color-panel: #0b1220;
+  --color-panel-2: #101a2e;
+  --color-line: #1b2740;
+  --color-bone: #eef4fb;
+  --color-mist: #8fa0b8;
+
+  --color-phosphor: #3ef2a6;
+  --color-phosphor-dim: #1fae74;
+  --color-cyan: #38c9f5;
+  --color-purple: #a78bff;
+  --color-pink: #ff6bd6;
+  --color-orange: #ff8a4a;
   --color-amber: #ffb454;
 
   --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
@@ -43,7 +49,7 @@ body {
   border-radius: 2px;
 }
 
-/* Subtle CRT scanlines — fixed overlay, never on scrolling containers */
+/* Subtle CRT scanlines — fixed overlay, purely decorative */
 .crt-overlay {
   position: fixed;
   inset: 0;
@@ -53,14 +59,14 @@ body {
     to bottom,
     transparent 0px,
     transparent 3px,
-    rgba(0, 0, 0, 0.12) 3px,
-    rgba(0, 0, 0, 0.12) 4px
+    rgba(0, 0, 0, 0.09) 3px,
+    rgba(0, 0, 0, 0.09) 4px
   );
-  opacity: 0.35;
+  opacity: 0.3;
   mix-blend-mode: multiply;
 }
 
-/* Terminal cursor blink for micro-moments */
+/* Terminal cursor blink */
 @keyframes blink {
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
@@ -72,11 +78,42 @@ body {
   animation: blink 1.1s steps(1) infinite;
 }
 
-/* Pixel-corner label used for game-UI moments (badges, prices) */
+/* Pixel-corner label (badges, prices, micro-labels) */
 .pixel-tag {
   font-family: var(--font-pixel);
   letter-spacing: 0.02em;
   line-height: 1.6;
+}
+
+/* Section entrance — subtle rise + fade */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise-in {
+  animation: rise-in 0.6s var(--ease-retro) both;
+}
+
+/* Soft CRT flicker — hero only, barely perceptible */
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.96; }
+  94% { opacity: 1; }
+  97% { opacity: 0.98; }
+}
+.crt-flicker {
+  animation: crt-flicker 6s infinite;
+}
+
+/* Card hover glow — restrained */
+.card-glow {
+  transition: border-color 0.25s var(--ease-retro), box-shadow 0.25s var(--ease-retro),
+    transform 0.25s var(--ease-retro);
+}
+.card-glow:hover {
+  border-color: color-mix(in srgb, var(--color-phosphor) 45%, transparent);
+  box-shadow: 0 0 24px -6px color-mix(in srgb, var(--color-phosphor) 30%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -84,6 +121,10 @@ body {
     scroll-behavior: auto;
   }
   .cursor-blink::after {
+    animation: none;
+  }
+  .rise-in,
+  .crt-flicker {
     animation: none;
   }
   *,

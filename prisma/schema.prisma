@@ -17,6 +17,7 @@ model Platform {
   name      String    @unique // PLAYSTATION, XBOX, NINTENDO, RETRO, HANDHELDS, GAMES, CONTROLLERS, POKEMON, PC_MAC, ACCESSORIES
   slug      String    @unique
   blurb     String?
+  imageUrl  String? // admin-managed category card image
   order     Int       @default(0)
   products  Product[]
 }
@@ -263,6 +264,16 @@ model AuditLog {
   id        String   @id @default(cuid())
   action    String
   detail    String?  @db.Text
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  handled   Boolean  @default(false)
   createdAt DateTime @default(now())
 }
 

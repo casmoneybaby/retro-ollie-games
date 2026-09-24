@@ -13,7 +13,7 @@ export function formatPrice(cents: number): string {
 export const CONDITION_META = {
   PLAYER: {
     label: "PLAYER",
-    tone: "text-bone border-line bg-panel-2",
+    tone: "text-orange border-orange/40 bg-orange/10",
     blurb: "Fully functional. Visible cosmetic wear. Best value for pure play.",
   },
   RESTORED: {
@@ -23,7 +23,7 @@ export const CONDITION_META = {
   },
   VAULT: {
     label: "VAULT",
-    tone: "text-amber border-amber/40 bg-amber/10",
+    tone: "text-purple border-purple/40 bg-purple/10",
     blurb: "Exceptional, collectible, rare or complete-in-box. Premium inventory.",
   },
 } as const;

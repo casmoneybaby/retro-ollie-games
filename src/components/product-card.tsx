@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formatPrice } from "@/lib/utils";
-import { ConditionBadge, StockBadge } from "./badges";
+import { ConditionBadge } from "./badges";
+import { QuickAddButton } from "./quick-add-button";
 import type { StorefrontProduct } from "@/lib/queries";
 
 export function ProductCard({ product }: { product: StorefrontProduct }) {
@@ -12,56 +13,50 @@ export function ProductCard({ product }: { product: StorefrontProduct }) {
   const dimmed = isSold || isReserved;
 
   return (
-    <Link
-      href={`/shop/${product.slug}`}
-      className="group flex flex-col overflow-hidden rounded-surface border border-line bg-panel transition-all duration-200 hover:-translate-y-1 hover:border-phosphor/40 hover:shadow-[0_8px_30px_-12px_rgba(74,227,130,0.25)]"
-    >
-      <div className="relative aspect-[4/3] overflow-hidden bg-panel-2">
+    <div className="card-glow group relative flex flex-col overflow-hidden rounded-surface border border-line bg-panel">
+      <Link href={`/shop/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden bg-panel-2">
         {img ? (
           <Image
             src={img}
             alt={cover.alt ?? product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className={dimmed ? "object-cover opacity-60 grayscale" : "object-cover transition-transform duration-500 group-hover:scale-[1.03]"}
+            className={dimmed ? "object-cover opacity-60 grayscale" : "object-cover transition-transform duration-500 group-hover:scale-[1.04]"}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="pixel-tag text-[10px] text-mist/40">NO PHOTO YET</span>
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-[repeating-linear-gradient(45deg,transparent_0_14px,rgba(255,255,255,0.015)_14px_28px)]">
+            <span className="pixel-tag text-[8px] text-mist/40">PHOTO</span>
+            <span className="pixel-tag text-[8px] text-mist/40">INCOMING</span>
           </div>
         )}
-        <div className="absolute left-2 top-2 flex gap-1.5">
+        <div className="absolute left-2.5 top-2.5">
           <ConditionBadge condition={product.condition} />
         </div>
         {dimmed && (
-          <span className="pixel-tag absolute right-2 top-2 rounded-sm bg-ink/80 px-2 py-1 text-[8px] text-amber">
+          <span className="pixel-tag absolute right-2.5 top-2.5 rounded-sm bg-ink/85 px-2 py-1 text-[7px] text-orange">
             {isSold ? "SOLD" : "RESERVED"}
           </span>
         )}
-      </div>
+      </Link>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-phosphor">
+      <div className="flex flex-1 flex-col gap-1.5 p-4">
+        <Link href={`/shop/${product.slug}`} className="line-clamp-1 text-[13px] font-semibold text-bone transition-colors hover:text-phosphor">
+          {product.name}
+        </Link>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-mist">
           {product.platform.name}
-        </span>
-        <h3 className="text-sm font-bold leading-snug text-bone">{product.name}</h3>
-        {product.defectNotes && (
-          <p className="line-clamp-1 text-[11px] text-mist">{product.defectNotes}</p>
-        )}
-        <div className="mt-auto flex items-end justify-between pt-2">
+          {product.storage ? ` · ${product.storage}` : ""}
+        </p>
+        <div className="mt-auto flex items-end justify-between gap-2 pt-2">
           <div>
-            <p className="font-mono text-lg font-bold text-bone">
-              {formatPrice(product.priceCents)}
-            </p>
+            <p className="font-mono text-lg font-bold text-bone">{formatPrice(product.priceCents)}</p>
             {product.compareAtCents && (
-              <p className="font-mono text-[11px] text-mist line-through">
-                {formatPrice(product.compareAtCents)}
-              </p>
+              <p className="font-mono text-[11px] text-mist line-through">{formatPrice(product.compareAtCents)}</p>
             )}
           </div>
-          {product.status === "AVAILABLE" && <StockBadge quantity={product.quantity} status={product.status} />}
+          {product.status === "AVAILABLE" && <QuickAddButton product={product} />}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

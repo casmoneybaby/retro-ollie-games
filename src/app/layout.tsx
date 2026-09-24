@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Space_Grotesk, JetBrains_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import { CrtOverlay } from "@/components/crt-overlay";
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     template: "%s | Retro Ollie Games",
   },
   description:
-    "Restored consoles, games & tech — cleaned, tested and ready for another generation. Shop refurbished retro gaming hardware or send in your console for expert refurbishment.",
+    "Retro Ollie Games is an online refurb store: buy restored consoles and games, sell or trade your gear, or send your console in for professional cleaning and refurbishment. Old tech. New life.",
   openGraph: {
     siteName: "Retro Ollie Games",
     type: "website",
@@ -50,7 +51,9 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${pressStart.variable} min-h-dvh bg-ink font-display text-bone`}
       >
-        <Header />
+        <Suspense>
+          <Header />
+        </Suspense>
         {children}
         <Footer />
         <CrtOverlay />

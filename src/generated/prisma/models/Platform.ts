@@ -39,6 +39,7 @@ export type PlatformMinAggregateOutputType = {
   name: string | null
   slug: string | null
   blurb: string | null
+  imageUrl: string | null
   order: number | null
 }
 
@@ -47,6 +48,7 @@ export type PlatformMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   blurb: string | null
+  imageUrl: string | null
   order: number | null
 }
 
@@ -55,6 +57,7 @@ export type PlatformCountAggregateOutputType = {
   name: number
   slug: number
   blurb: number
+  imageUrl: number
   order: number
   _all: number
 }
@@ -73,6 +76,7 @@ export type PlatformMinAggregateInputType = {
   name?: true
   slug?: true
   blurb?: true
+  imageUrl?: true
   order?: true
 }
 
@@ -81,6 +85,7 @@ export type PlatformMaxAggregateInputType = {
   name?: true
   slug?: true
   blurb?: true
+  imageUrl?: true
   order?: true
 }
 
@@ -89,6 +94,7 @@ export type PlatformCountAggregateInputType = {
   name?: true
   slug?: true
   blurb?: true
+  imageUrl?: true
   order?: true
   _all?: true
 }
@@ -184,6 +190,7 @@ export type PlatformGroupByOutputType = {
   name: string
   slug: string
   blurb: string | null
+  imageUrl: string | null
   order: number
   _count: PlatformCountAggregateOutputType | null
   _avg: PlatformAvgAggregateOutputType | null
@@ -215,6 +222,7 @@ export type PlatformWhereInput = {
   name?: Prisma.StringFilter<"Platform"> | string
   slug?: Prisma.StringFilter<"Platform"> | string
   blurb?: Prisma.StringNullableFilter<"Platform"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Platform"> | string | null
   order?: Prisma.IntFilter<"Platform"> | number
   products?: Prisma.ProductListRelationFilter
 }
@@ -224,6 +232,7 @@ export type PlatformOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   blurb?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   products?: Prisma.ProductOrderByRelationAggregateInput
 }
@@ -236,6 +245,7 @@ export type PlatformWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PlatformWhereInput[]
   NOT?: Prisma.PlatformWhereInput | Prisma.PlatformWhereInput[]
   blurb?: Prisma.StringNullableFilter<"Platform"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Platform"> | string | null
   order?: Prisma.IntFilter<"Platform"> | number
   products?: Prisma.ProductListRelationFilter
 }, "id" | "name" | "slug">
@@ -245,6 +255,7 @@ export type PlatformOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   blurb?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   _count?: Prisma.PlatformCountOrderByAggregateInput
   _avg?: Prisma.PlatformAvgOrderByAggregateInput
@@ -261,6 +272,7 @@ export type PlatformScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Platform"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Platform"> | string
   blurb?: Prisma.StringNullableWithAggregatesFilter<"Platform"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Platform"> | string | null
   order?: Prisma.IntWithAggregatesFilter<"Platform"> | number
 }
 
@@ -269,6 +281,7 @@ export type PlatformCreateInput = {
   name: string
   slug: string
   blurb?: string | null
+  imageUrl?: string | null
   order?: number
   products?: Prisma.ProductCreateNestedManyWithoutPlatformInput
 }
@@ -278,6 +291,7 @@ export type PlatformUncheckedCreateInput = {
   name: string
   slug: string
   blurb?: string | null
+  imageUrl?: string | null
   order?: number
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutPlatformInput
 }
@@ -287,6 +301,7 @@ export type PlatformUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   blurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUpdateManyWithoutPlatformNestedInput
 }
@@ -296,6 +311,7 @@ export type PlatformUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   blurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   products?: Prisma.ProductUncheckedUpdateManyWithoutPlatformNestedInput
 }
@@ -305,6 +321,7 @@ export type PlatformCreateManyInput = {
   name: string
   slug: string
   blurb?: string | null
+  imageUrl?: string | null
   order?: number
 }
 
@@ -313,6 +330,7 @@ export type PlatformUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   blurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -321,6 +339,7 @@ export type PlatformUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   blurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -329,6 +348,7 @@ export type PlatformCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   blurb?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -341,6 +361,7 @@ export type PlatformMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   blurb?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -349,6 +370,7 @@ export type PlatformMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   blurb?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -396,6 +418,7 @@ export type PlatformCreateWithoutProductsInput = {
   name: string
   slug: string
   blurb?: string | null
+  imageUrl?: string | null
   order?: number
 }
 
@@ -404,6 +427,7 @@ export type PlatformUncheckedCreateWithoutProductsInput = {
   name: string
   slug: string
   blurb?: string | null
+  imageUrl?: string | null
   order?: number
 }
 
@@ -428,6 +452,7 @@ export type PlatformUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   blurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -436,6 +461,7 @@ export type PlatformUncheckedUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   blurb?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -475,6 +501,7 @@ export type PlatformSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name?: boolean
   slug?: boolean
   blurb?: boolean
+  imageUrl?: boolean
   order?: boolean
   products?: boolean | Prisma.Platform$productsArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformCountOutputTypeDefaultArgs<ExtArgs>
@@ -485,6 +512,7 @@ export type PlatformSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   name?: boolean
   slug?: boolean
   blurb?: boolean
+  imageUrl?: boolean
   order?: boolean
 }, ExtArgs["result"]["platform"]>
 
@@ -493,6 +521,7 @@ export type PlatformSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   name?: boolean
   slug?: boolean
   blurb?: boolean
+  imageUrl?: boolean
   order?: boolean
 }, ExtArgs["result"]["platform"]>
 
@@ -501,10 +530,11 @@ export type PlatformSelectScalar = {
   name?: boolean
   slug?: boolean
   blurb?: boolean
+  imageUrl?: boolean
   order?: boolean
 }
 
-export type PlatformOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "blurb" | "order", ExtArgs["result"]["platform"]>
+export type PlatformOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "blurb" | "imageUrl" | "order", ExtArgs["result"]["platform"]>
 export type PlatformInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | Prisma.Platform$productsArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformCountOutputTypeDefaultArgs<ExtArgs>
@@ -522,6 +552,7 @@ export type $PlatformPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     name: string
     slug: string
     blurb: string | null
+    imageUrl: string | null
     order: number
   }, ExtArgs["result"]["platform"]>
   composites: {}
@@ -951,6 +982,7 @@ export interface PlatformFieldRefs {
   readonly name: Prisma.FieldRef<"Platform", 'String'>
   readonly slug: Prisma.FieldRef<"Platform", 'String'>
   readonly blurb: Prisma.FieldRef<"Platform", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"Platform", 'String'>
   readonly order: Prisma.FieldRef<"Platform", 'Int'>
 }
     

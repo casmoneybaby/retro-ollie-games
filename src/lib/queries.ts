@@ -38,6 +38,22 @@ export async function getPlatformBySlug(slug: string) {
   return db.platform.findUnique({ where: { slug } });
 }
 
+/** All platforms in display order (for the SHOP BY SYSTEM grid). */
+export async function getPlatforms() {
+  return db.platform.findMany({ orderBy: { order: "asc" } });
+}
+
+/** Read an admin-editable SiteSetting JSON value with a fallback. */
+export async function getSiteSettingJSON<T>(key: string, fallback: T): Promise<T> {
+  try {
+    const row = await db.siteSetting.findUnique({ where: { key } });
+    if (!row) return fallback;
+    return JSON.parse(row.value) as T;
+  } catch {
+    return fallback;
+  }
+}
+
 export async function getFeatured(limit = 4) {
   return db.product.findMany({
     where: { status: ProductStatus.AVAILABLE },

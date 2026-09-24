@@ -60,7 +60,7 @@ export default async function RefurbishPage() {
           }}
         />
         <div className="relative mx-auto max-w-4xl px-4 py-16 text-center">
-          <p className="pixel-tag text-[9px] text-phosphor">RESPAWN SERVICE</p>
+          <p className="cursor-blink font-mono text-xs text-phosphor">{"// RESPAWN SERVICE"}</p>
           <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
             Your console, <span className="text-phosphor">professionally respawned</span>
           </h1>
