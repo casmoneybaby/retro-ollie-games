@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RETRO OLLIE GAMES
 
-## Getting Started
+**OLD TECH. NEW LIFE.**
 
-First, run the development server:
+Restored consoles, games & tech — sourced from marketplaces and eBay, restored at the
+workbench, and shipped ready to play. Plus a full refurbishment service: customers send in
+their consoles and get them respawned.
+
+## Stack
+
+| Layer      | Tech                                    |
+| ---------- | --------------------------------------- |
+| Framework  | Next.js 16 (App Router) + TypeScript    |
+| Database   | Neon PostgreSQL + Prisma 7 (serverless) |
+| Payments   | Stripe Checkout + verified webhooks     |
+| Styling    | Tailwind CSS 4 + custom CRT design sys  |
+| Hosting    | Vercel                                  |
+| Source     | GitHub                                  |
+
+## Commerce features
+
+- **One-of-one inventory protection** — atomic server-side reservation inside a DB
+  transaction; two customers can never buy the same unique console
+- **Server-authoritative pricing** — the browser never sends prices; checkout pulls real
+  product data from Neon
+- **Idempotent Stripe webhooks** — status-guarded order transitions; duplicate deliveries
+  can't corrupt inventory
+- **Abandoned-checkout restock** — reserved units return to the shelf automatically
+- **Price snapshots** — orders store what was actually paid, not the current catalog price
+- **Refund architecture** — admin-initiated Stripe refunds; inventory is *not* auto-restocked
+  (the owner decides after physical return)
+
+## Refurbishment (Respawn) system
+
+- Customer intake with generated job numbers (`RESPAWN-00128`)
+- 10-stage pipeline: REQUEST_RECEIVED → AWAITING_DEVICE → … → COMPLETED
+- Customer-facing status tracking at `/respawn-log` (job number + email)
+- Stripe deposit flow per job, quote adjustable after inspection
+- Internal notes stay internal
+
+## Admin Control Center (`/admin`)
+
+Product CRUD with private acquisition/parts/other costs (never rendered publicly),
+publish/unpublish, order management with guarded refunds, service pipeline updates,
+trade-lead tracking, and real analytics (revenue, AOV, contribution profit, margin,
+inventory value).
+
+## Local development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+cp .env.example .env.local   # fill in real values
+pnpm prisma db push          # sync schema
+pnpm seed                    # platforms, tiers, catalog, admin user
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm build       # production build
+pnpm typecheck   # tsc --noEmit
+pnpm seed        # idempotent seed (skips existing records)
+pnpm db:check    # row counts per table
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment variables
 
-## Learn More
+See `.env.example` for the full list with safe placeholders. Real values live only in
+Vercel (Production/Preview) and local `.env.local` — never committed.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+GitHub → Vercel (auto-deploys on push). Neon pooler connection string, Stripe keys, and
+`AUTH_SECRET` are configured as Vercel environment variables. Stripe webhook endpoint:
+`https://retro-ollie-games.vercel.app/api/stripe/webhook`
